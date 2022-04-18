@@ -1,39 +1,305 @@
-## Getting Started
+# Pixelbin Core SDK
 
-Get started with the Javascript Development SDK for test-push-3 Platform
+Pixelbin Core SDK helps you integrate Pixelbin with your Frontend JS Application.
 
-### Usage
+## Installation
 
 ```
-npm install  @baranwal-adi/test-push-3 --save
+npm install  @pixelbin/core --save
 ```
 
-### Sample Usage - ApplicationClient
+## Usage
+
+### Setup
 
 ```javascript
-import { resize } from "@baranwal-adi/test-push-3/plugins/Sharp.js";
-import EraseBg from "@baranwal-adi/test-push-3/plugins/EraseBG.js";
-import Pixelbin from "@baranwal-adi/test-push-3";
+// Import the Pixelbin class
+import Pixelbin from "@pixelbin/core";
 
-// intiate pixelbin image with cloud name and zone
-let pixelbin = new Pixelbin({
-    cloud: {
-        name: "yellow-block-cd3e57",
-        zone: "0",
-    },
+// Create your instance
+const pixelbin = new Pixelbin({
+    cloudName: "demo",
+    zone: "default", // optional
+});
+```
+
+---
+
+### Transform and Optimize Images
+
+```javascript
+// Import transformations
+import EraseBg from "@pixelbin/core/transformations/EraseBg";
+import Basic from "@pixelbin/core/transformations/Basic";
+
+// Create a new instance. If you have't (see above for the details)
+const pixelbin = new Pixelbin({
+    /*...*/
 });
 
-// initiate image for pixelbin
-let img = pixelbin.image("uploads/original/0b7b31de-6fa5-4883-92fd-23843ce3e286.jpeg");
-
-// get backgroud removal transformation from erasebg. 
+// Create EraseBg.bg transformation
 let t1 = EraseBg.bg();
 
-// get resize transformation from erasebg. 
-let t2 = resize({ height: 1143, width: 995 });
+// Create resize transformation
+const t2 = Basic.resize({ height: 100, width: 100 });
 
-// creating another transformation using t1 and t2. 
-let t3 = t1.and(t2);
+// create a new image
+const demoImage = pixelbin.image("path/to/image"); // File Path on Pixelbin
 
-// prints transformation url. 
-console.log(img.setTransformation(t3).getUrl());
+// Add the transformations to the image
+demoImage.setTransformation(t1.pipe(t2));
+
+// Get the image url
+console.log(demoImage.getUrl());
+// output
+// https://cdn.pixelbin.io/v2/your-cloud-name/z-slug/erase.bg()~t.resize(h:100,w:100)/path/to/image
+```
+
+---
+
+### Add Pixelbin to HTML
+
+Add the [this](./dist) distributable in a script tag along with axios
+
+```html
+<script src="pixelbin.v{{ '' | getVersion() }}.js"></script>
+```
+
+```javascript
+// Pixelbin is available in the browser as `Pixelbin` on the window object
+const pixelbin = new Pixelbin({ cloudName: "demo", zone: "default" });
+
+// create an image with the pixelbin object
+const image = pixelbin.image("demoImage.jpeg");
+
+// create a transformation
+let t = Pixelbin.transformations.Basic.resize({ height: 100, width: 100 });
+
+// add Transformations to the image
+image.setTransformation(t);
+
+// get the url
+image.getUrl();
+// output
+// https://cdn.pixelbin.io/v2/demo/default/t.resize(h:100,w:100)/demoImage.jpeg
+
+```
+
+---
+
+## Upload images to pixelbin
+
+The SDK provides a `upload` utility to upload images directly from the browser with a presigned url.
+
+### upload(file, signedDetails):
+
+| parameter | type                                                          |
+| --------- | ------------------------------------------------------------- |
+| file ([File](https://developer.mozilla.org/en-US/docs/Web/API/File)) | File to upload to Pixelbin |
+| signedDetails (Object) | `signedDetails` can be generated with the Pixelbin Backend SDK [@pixelbin/admin](https://github.com/pixelbin-dev/pixelbin-js-admin). |
+
+**returns**: Promise
+
+* Resolves with no response on success.
+* Rejects with error on failure. 
+
+
+Example : 
+1. Define an html file input element
+```html
+<input type="file" id="fileInput" />
+```
+
+2. Generate the presignedUrl with the backend sdk. [click here](https://github.com/pixelbin-dev/pixelbin-js-admin/blob/main/documentation/platform/ASSETS.md#createsignedurl).
+
+3. Use the response object as is with the upload api as shown below.
+
+```javascript
+const fileInput = document.getElementById("fileInput");
+// the signed url and fields can be generated and served with @pixelbin/admin
+
+const handleFileInputEvent = function (e) {
+    const file = e.target.files[0];
+    Pixelbin.upload(file, signedDetails)
+        .then(() => console.log("Uploaded Successfully"))
+        .catch((err) => console.log("Error while uploading"));
+};
+fileInput.addEventListener("change", handleFileInputEvent);
+```
+
+---
+
+## Utilities
+
+Pixelbin provides url utilities to construct and deconstruct Pixelbin urls.
+
+### urlToObj
+
+Deconstruct a pixelbin url
+
+| parameter   | description   | example |
+| ----------- | ------ | --- |
+| pixelbinUrl (string) | A valid pixelbin url | `https://cdn.pixelbin.io/v2/your-cloud-name/z-slug/t.resize(h:100,w:200)~t.flip()/path/to/image.jpeg` |
+
+    
+**Returns**:
+
+| property        | description            | example                           |
+| --------------- | --------------- | --------------------------------- |
+| cloudName (string)       | The cloudname extracted from the url          | `your-cloud-name`                 |
+| zone (string)          | 6 character zone slug          | `z-slug` |
+| version (string)    | cdn api version          | `v2` |
+| transformations (array) | Extracted transformations from the url |   |
+| filePath | Path to the file on Pixelbin storage | `/path/to/image.jpeg` |
+| baseUrl (string) | Base url | `https://cdn.pixelbin.io/`|
+
+Example: 
+```javascript
+const pixelbinUrl =
+    "https://cdn.pixelbin.io/v2/your-cloud-name/z-slug/t.resize(h:100,w:200)~t.flip()/path/to/image.jpeg";
+
+const obj = Pixelbin.utils.urlToObj(pixelbinUrl);
+// obj
+// {
+//     "cloudName": "your-cloud-name",
+//     "zone": "z-slug",
+//     "version": "v2",
+//     "transformations": [
+//         {
+//             "plugin": "t",
+//             "name": "resize",
+//             "values": [
+//                 {
+//                     "key": "h",
+//                     "value": "100"
+//                 },
+//                 {
+//                     "key": "w",
+//                     "value": "200"
+//                 }
+//             ]
+//         },
+//         {
+//             "plugin": "t",
+//             "name": "flip",
+//         }
+//     ],
+//     "filePath": "path/to/image.jpeg",
+//     "baseUrl": "https://cdn.pixelbin.io"
+// }
+```
+
+### objToUrl
+
+Converts the extracted url obj to a Pixelbin url. 
+
+| property        | description            | example                           |
+| --------------- | --------------- | --------------------------------- |
+| cloudName (string)       | The cloudname extracted from the url          | `your-cloud-name`                 |
+| zone (string)          | 6 character zone slug          | `z-slug` |
+| version (string)    | cdn api version          | `v2` |
+| transformations (array) | Extracted transformations from the url |   |
+| filePath | Path to the file on Pixelbin storage | `/path/to/image.jpeg` |
+| baseUrl (string) | Base url | `https://cdn.pixelbin.io/`|
+
+```javascript
+const obj = {
+    "cloudName": "your-cloud-name",
+    "zone": "z-slug",
+    "version": "v2",
+    "transformations": [
+        {
+            "plugin": "t",
+            "name": "resize",
+            "values": [
+                {
+                    "key": "h",
+                    "value": "100"
+                },
+                {
+                    "key": "w",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "plugin": "t",
+            "name": "flip",
+        }
+    ],
+    "filePath": "path/to/image.jpeg",
+    "baseUrl": "https://cdn.pixelbin.io"
+}
+const url = Pixelbin.utils.objToUrl(obj); // obj is as shown above
+// url
+// https://cdn.pixelbin.io/v2/your-cloud-name/z-slug/t.resize(h:100,w:200)~t.flip()/path/to/image.jpeg
+```
+
+## Transformation
+A transformation is an operation or a list of operations that can be performed on an image. Please refer [list of supported transformations](#list-of-supported-transformations) for details. 
+
+``` javascript
+// import a resize transformation
+import { resize } from "@pixelbin/core/transformations/Basic";
+
+// create the resize transformation
+const t = resize({height: 100, width: 100});
+```
+
+Multiple transformations can be chained by using `and` on the created transformation object
+
+``` javascript
+// import a resize transformation
+import { resize, flip } from "@pixelbin/core/transformations/Basic";
+
+// create the basic transformations
+const t1 = resize({height: 100, width: 100});
+const t2 = flip();
+const t3 = t1.pipe(t2);
+```
+
+## Image
+Image class represents an image on Pixelbin. 
+
+``` javascript
+//To create an Image, call image method on the pixelbin object;
+const image = pixelbin.image("path/to/image");
+```
+
+Transformations can be set on an image by using `setTransformation` on the image object. 
+
+``` javascript
+image.setTransformation(t)
+```
+
+To get the url of the image with the applied transformations, use the `getUrl` on the image object.
+``` javascript
+image.getUrl()
+```
+For a working example, refer [here](#transform-and-optimize-images)
+## List of supported transformations
+{% if data %}
+{% for plugin in data %}
+### {{loop.index}}{% raw %}.{% endraw %} {{plugin.plugin.name}}
+{% for method in plugin.methods %}
+
+<details>
+<summary> {{loop.index}}{% raw %}.{% endraw %} {{method.name}} </summary>
+{% if method.parameters | length %}
+#### Supported Configuration
+
+| parameter | type | defaults |
+| -- | -- | -- | {% for parameter in method.parameters %}
+| {{ parameter.name | camelCase() }} | {%if parameter.type === "enum" %} {{parameter.type}} {% raw %}:{% endraw %}{% for item in parameter.enum %} `{{item}}` {% if not loop.last%},{% endif %} {% endfor %} {% raw %}{% endraw %}{% else %} {{parameter.type}} {% endif %} | {%if parameter.default | isString(parameter.default)%}`{{parameter.default}}`{% else %}{{parameter.default}}{% endif %}|{% endfor %}
+{% endif %}
+#### Usage Example
+``` javascript
+const t = {{ method.name }}({% raw %}{{% endraw %}{% for parameter in method.parameters %}
+    {{ parameter.name | camelCase() }}: {%if parameter.default | isString(parameter.default)%}'{{parameter.default}}'{% else %}{{parameter.default}}{% endif %} {% if not loop.last %},{% endif %}{% endfor %}
+{% raw %}}{% endraw %});
+```
+
+</details>
+{% endfor %}
+{% endfor %}
+{% endif %}

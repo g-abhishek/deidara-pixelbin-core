@@ -3,14 +3,16 @@ module.exports = {
 
     filesPaths: {
         JAVASCRIPT: {
-            OUTPUT: ["/plugins/", "transformation.js", "image.js", "pixelbin.js", "package.json", "README.md"],
+            OUTPUT: ["/transformations/", "transformation.js", "image.js", "pixelbin.js", "package.json", "README.md", "/utils/index.js", "webpack.config.js"],
             TEMPLATES: [
-                "plugin.nunjucks",
+                "transformations.nunjucks",
                 "transformation.nunjucks",
                 "image.nunjucks",
                 "pixelbin.nunjucks",
                 "package.nunjucks",
-                "readme.nunjucks"
+                "readme.nunjucks",
+                "url.nunjucks",
+                "webpack.config.nunjucks",
             ]
         },
     },
