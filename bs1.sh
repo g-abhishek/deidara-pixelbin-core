@@ -10,6 +10,6 @@ ls ./artifacts/javascript
 npm i --prefix ./artifacts/javascript
 npx webpack-cli --config ./artifacts/javascript/webpack.config.js
 rm ./artifacts/javascript/webpack.config.js
-rm ./test-code/dist/pixelbin.*
-cp ./artifacts/javascript/dist/* ./test-code/dist/
+# rm ./test-code/dist/pixelbin.*
+# cp ./artifacts/javascript/dist/* ./test-code/dist/
 # node ./scripts/github_deploy.js
