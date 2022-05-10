@@ -1,5 +1,5 @@
-import {PDKInvalidUrlError} from "../errors/PixelbinErrors";
-import {version2Regex, urlWithZone, urlWithoutZone} from "./regex";
+import { PDKInvalidUrlError } from "../errors/PixelbinErrors";
+import { version2Regex, urlWithZone, urlWithoutZone } from "./regex";
 
 const getUrlParts = function (pixelbinUrl) {
     const { protocol, host, pathname, search } = new URL(pixelbinUrl);
@@ -13,7 +13,7 @@ const getUrlParts = function (pixelbinUrl) {
     if (version2Regex.test(parts[1])) {
         urlDetails["version"] = parts.splice(1, 1)[0];
     }
-    if(parts[1].length < 3)
+    if (parts[1].length < 3)
         throw new PDKInvalidUrlError("Invalid pixelbin url. Please make sure the url is correct.");
     if (urlWithZone.test(parts.join("/"))) {
         urlDetails["cloudName"] = parts.splice(1, 1)[0];
@@ -30,7 +30,4 @@ const getUrlParts = function (pixelbinUrl) {
     return urlDetails;
 };
 
-export {
-    getUrlParts,
-    version2Regex,
-}
+export { getUrlParts, version2Regex };

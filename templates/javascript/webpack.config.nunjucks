@@ -8,6 +8,7 @@ module.exports = {
         path: path.resolve("./artifacts/javascript/", "./dist"),
         filename: "[name].v{{ "" | getVersion()}}.js",
         library: "Pixelbin",
+        libraryTarget: 'umd',
         libraryExport: "default",
     },
     module: {

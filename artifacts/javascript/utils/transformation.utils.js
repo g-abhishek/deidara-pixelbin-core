@@ -1,34 +1,33 @@
 import { getUrlParts } from "./common.utils";
 import { version2Regex, zoneSlug } from "./regex";
-import {PDKInvalidUrlError, PDKIllegalArgumentError} from "../errors/PixelbinErrors";
+import { PDKInvalidUrlError, PDKIllegalArgumentError } from "../errors/PixelbinErrors";
 
-export const getUrlFromObj = function (obj, config){
-    if(!obj.baseUrl) obj["baseUrl"] = "https://cdn.pixelbin.io";
-    if(!obj.cloudName) throw new PDKIllegalArgumentError("key cloudName should be defined");
-    if(!obj.filePath) throw new PDKIllegalArgumentError("key filePath should be defined");
+export const getUrlFromObj = function (obj, config) {
+    if (!obj.baseUrl) obj["baseUrl"] = "https://cdn.pixelbin.io";
+    if (!obj.cloudName) throw new PDKIllegalArgumentError("key cloudName should be defined");
+    if (!obj.filePath) throw new PDKIllegalArgumentError("key filePath should be defined");
     obj["pattern"] = getPatternFromTransformations(obj["transformations"], config) || "original";
-    if(!obj.version || !version2Regex.test(obj.version)) obj.version = "v2";
-    if(!obj.zone || !zoneSlug.test(obj.zone)) obj.zone = "";
+    if (!obj.version || !version2Regex.test(obj.version)) obj.version = "v2";
+    if (!obj.zone || !zoneSlug.test(obj.zone)) obj.zone = "";
     const urlKeySorted = ["baseUrl", "version", "cloudName", "zoneSlug", "pattern", "filePath"];
     const urlArr = [];
     urlKeySorted.forEach((key) => {
         if (obj[key]) urlArr.push(obj[key]);
     });
     return urlArr.join("/");
-
 };
 
 const getPartsFromUrl = function (url) {
     const parts = getUrlParts(url);
     return {
-            baseUrl: `${parts["protocol"]}//${parts["host"]}`,
-            filePath: parts["filePath"],
-            pattern: parts["pattern"],
-            version: parts["version"],
-            zone: parts["zoneSlug"],
-            cloudName: parts["cloudName"],
-    }
-}
+        baseUrl: `${parts["protocol"]}//${parts["host"]}`,
+        filePath: parts["filePath"],
+        pattern: parts["pattern"],
+        version: parts["version"],
+        zone: parts["zoneSlug"],
+        cloudName: parts["cloudName"],
+    };
+};
 
 function removeLeadingDash(str) {
     if (str.charAt(0) === "-") {
@@ -47,8 +46,8 @@ function getParamsObject(paramsList) {
         const [param, val] = item.split(":");
         if (param) {
             params.push({
-                key : param,
-                value : val
+                key: param,
+                value: val,
             });
         }
     });
@@ -58,30 +57,29 @@ function getParamsObject(paramsList) {
 function txtToOptions(dSplit) {
     // Figure Out Module
     const fullFnName = dSplit.split("(")[0];
-    
+
     const [pluginId, operationName] = fullFnName.split(".");
 
     if (pluginId === "p") {
         const params = getParamsObject(getParamsList(dSplit, ""));
-        const presetName = params.find(({key, value}) => key === "n");
-        if(presetName?.key){
+        const presetName = params.find(({ key, value }) => key === "n");
+        if (presetName?.key) {
             return {
                 plugin: pluginId,
                 name: presetName.value,
-            }
+            };
         }
         return;
     }
 
     const values = getParamsObject(getParamsList(dSplit, "."));
-    const [plugin, name] = dSplit.split("(")[0].split(".")
+    const [plugin, name] = dSplit.split("(")[0].split(".");
     const transformation = {
         values: values,
         plugin,
         name,
     };
-    if(!transformation.values)
-        delete transformation["values"];
+    if (!transformation.values) delete transformation["values"];
     return transformation;
 }
 
@@ -95,7 +93,7 @@ const getTransformationsFromPattern = function (pattern, url, config, flatten = 
         .map((x) => {
             if (x.startsWith("p:")) {
                 const [, presetString] = x.split(":");
-                x = `p.apply(n:${presetString})`
+                x = `p.apply(n:${presetString})`;
             }
             return txtToOptions(x);
         })
@@ -108,10 +106,8 @@ export const getObjFromUrl = function (url, config, flatten) {
     const parts = getPartsFromUrl(url);
     try {
         parts.transformations = getTransformationsFromPattern(parts.pattern, url, config, flatten);
-    }catch (err) {
-        throw new PDKInvalidUrlError(
-            "Error Processing url. Please check the url is correct"
-        );
+    } catch (err) {
+        throw new PDKInvalidUrlError("Error Processing url. Please check the url is correct");
     }
     delete parts["pattern"];
     return parts;
@@ -125,12 +121,12 @@ export const getPatternFromTransformations = function (transformationList, confi
                       if (o.plugin === "p") {
                           return `p:${o.name}`;
                       } else {
-                        o.values = o.values || [];
-                        const paramsStr = o.values
-                            .map(({key, value}) => {
-                                return `${key}:${value}`;
-                            })
-                            .join(config.parameterSeparator);
+                          o.values = o.values || [];
+                          const paramsStr = o.values
+                              .map(({ key, value }) => {
+                                  return `${key}:${value}`;
+                              })
+                              .join(config.parameterSeparator);
                           return `${o.plugin}.${o.name}(${paramsStr})`;
                       }
                   } else {

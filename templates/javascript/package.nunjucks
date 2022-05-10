@@ -10,7 +10,7 @@
       "url": "git+https://github.com/pixelbin-dev/pixelbin-core.git"
   },
   "peerDependencies": {
-    "axios": "0.26.1"
+    "axios": "*"
   },
   "dependencies": {
     "core-js": "3.21.1",
@@ -26,12 +26,7 @@
     "regenerator-runtime": "0.13.9",
     "jest": "27.5.1"
   },
-    "main": "dist/pixelbin.v{{ "" | getVersion() }}.js",
-    "module": "dist/pixelbin.v{{ "" | getVersion() }}.js",
-    "files": [
-        "dist",
-        "README.md"
-    ],
+  "main": "pixelbin.js",
   "author": "Pixelbin",
   "license": "MIT"
 }
