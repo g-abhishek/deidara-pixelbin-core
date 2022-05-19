@@ -1,5 +1,5 @@
 {
-    "name": "@pixelbin/core",
+    "name": "deidara-pixelbin-core",
     "version": "1.0.2",
     "description": "Pixelbin Core SDK helps you integrate Pixelbin with your Frontend JS Application.",
     "scripts": {
