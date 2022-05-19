@@ -17,14 +17,17 @@
         "regenerator-runtime": "0.13.9"
     },
     "devDependencies": {
+        "@babel/cli": "^7.17.10",
         "@babel/core": "7.17.7",
+        "@babel/plugin-transform-modules-commonjs": "^7.17.12",
         "@babel/plugin-transform-runtime": "7.17.0",
         "@babel/preset-env": "7.16.11",
+        "@babel/preset-react": "^7.17.12",
         "babel-loader": "8.2.3",
-        "webpack": "4.44.1",
         "core-js": "3.21.1",
+        "jest": "27.5.1",
         "regenerator-runtime": "0.13.9",
-        "jest": "27.5.1"
+        "webpack": "4.44.1"
     },
     "main": "pixelbin.js",
     "author": "Pixelbin",
