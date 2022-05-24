@@ -2354,3 +2354,4 @@ class Pixelbin {
 }
 
 export { Transformation, Pixelbin as default };
+//# sourceMappingURL=bundle.js.map

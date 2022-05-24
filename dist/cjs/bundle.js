@@ -1,5 +1,3 @@
-'use strict';
-
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var axios = require('axios');
@@ -2363,3 +2361,4 @@ class Pixelbin {
 
 exports.Transformation = Transformation;
 exports["default"] = Pixelbin;
+//# sourceMappingURL=bundle.js.map

@@ -9,9 +9,15 @@ export default {
     output: [{
         file: packageJson.main,
         format: "cjs",
+        exports: 'named',
+        sourcemap: true,
+        strict: false
     },{
         file: packageJson.module,
         format: "esm",
+        exports: 'named',
+        sourcemap: true,
+        strict: false
     }],
     
     plugins: [nodeResolve(), babel({ babelHelpers: "bundled"})]
