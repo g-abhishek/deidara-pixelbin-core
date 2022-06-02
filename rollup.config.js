@@ -1,5 +1,6 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { babel } from '@rollup/plugin-babel';
+import commonjs from '@rollup/plugin-commonjs';
 
 const packageJson = require("./package.json");
 
@@ -9,12 +10,6 @@ export default {
     output: [{
         file: packageJson.main,
         format: "cjs",
-        exports: 'named',
-        sourcemap: true,
-        strict: false
-    },{
-        file: packageJson.module,
-        format: "esm",
         exports: 'named',
         sourcemap: true,
         strict: false
