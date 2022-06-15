@@ -1,0 +1,24 @@
+{
+  "include": ["./"],
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "allowJs": true,
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/types",
+    // "declarationMap": true
+  },
+  "exclude": [
+    "node_modules",
+    ".babelrc.js",
+    "setupTests.js",
+    "webpack.config.js",
+    "rollup.config.js",
+    "jest.config.js",
+    "errors",
+    "schema",
+    "tests",
+  ]
+}

@@ -1,12 +1,6 @@
 const path = require("path");
 
-module.exports = {
-  entry: "./pixelbin.js",
-  output: {
-    path: path.resolve("dist"),
-    filename: "index.js",
-    libraryTarget: "commonjs2",
-  },
+const config =  {
   externals: {
     axios: "axios",
     "core-js": "core-js",
@@ -25,3 +19,26 @@ module.exports = {
     extensions: ["*", ".js", ".jsx"],
   },
 };
+
+var cjsConfig = Object.assign({}, config, {
+    entry: "./pixelbin.js",
+    output: {
+      path: path.resolve("dist/cjs/"),
+      filename: "pixelbin.js",
+      libraryTarget: "commonjs2",
+    }
+})
+
+var umdConfig = Object.assign({}, config, {
+    entry: "./pixelbin.js",
+    output: {
+      path: path.resolve("dist/umd/"),
+      filename: "pixelbin.js",
+      libraryTarget: "umd",
+    }
+})
+
+module.exports = [
+  cjsConfig, 
+  umdConfig
+];
