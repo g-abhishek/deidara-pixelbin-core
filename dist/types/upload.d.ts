@@ -5,3 +5,4 @@
  * @returns Promise
  */
 export function upload(file: File, signedDetails: any): Promise<any>;
+//# sourceMappingURL=upload.d.ts.map

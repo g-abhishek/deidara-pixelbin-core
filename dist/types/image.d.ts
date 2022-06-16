@@ -27,3 +27,4 @@ declare class Image {
      */
     getUrl(): string;
 }
+//# sourceMappingURL=image.d.ts.map

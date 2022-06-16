@@ -7,3 +7,4 @@ export function urlToObj(url: any): {
     cloudName: any;
 };
 export function objToUrl(obj: any): string;
+//# sourceMappingURL=index.d.ts.map

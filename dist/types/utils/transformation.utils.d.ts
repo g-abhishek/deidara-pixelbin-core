@@ -10,3 +10,4 @@ export function getObjFromUrl(url: any, config: any, flatten: any): {
 export function getPatternFromTransformations(transformationList: any, config: any): any;
 export function getUnArchivedPresets(presets: any): any;
 export function rgbHex(red: any, green: any, blue: any, alpha: any): string;
+//# sourceMappingURL=transformation.utils.d.ts.map

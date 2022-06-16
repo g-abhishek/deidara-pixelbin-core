@@ -4,3 +4,4 @@ export class PDKInvalidUrlError extends Error {
 export class PDKIllegalArgumentError extends Error {
     constructor(message: any);
 }
+//# sourceMappingURL=PixelbinErrors.d.ts.map

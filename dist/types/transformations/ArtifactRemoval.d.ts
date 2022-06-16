@@ -4,3 +4,4 @@ declare namespace _default {
 }
 export default _default;
 import Transformation from "../transformation.js";
+//# sourceMappingURL=ArtifactRemoval.d.ts.map

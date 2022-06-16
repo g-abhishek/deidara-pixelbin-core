@@ -8,7 +8,11 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "dist/types",
-    // "declarationMap": true
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["*"]
+    },
   },
   "exclude": [
     "node_modules",
@@ -19,6 +23,6 @@
     "jest.config.js",
     "errors",
     "schema",
-    "tests",
+    "tests"
   ]
 }

@@ -4,6 +4,7 @@
     "description": "Pixelbin Core SDK helps you integrate Pixelbin with your Frontend JS Application.",
     "scripts": {
         "build": "rm -rf dist && mkdir dist && rollup --config",
+        "build:tsc": "tsc",
         "build:webpack": "webpack --mode production && npx tsc",
         "test": "jest"
     },
@@ -39,11 +40,10 @@
         "webpack": "4.44.1",
         "webpack-cli": "^4.9.2"
     },
-    "main": "dist/cjs/pixelbin.js",
-    "module": "dist/umd/pixelbin.js",
+    "main": "dist/pixelbin.js",
+    "types": "dist/types/",
     "author": "Pixelbin",
     "license": "MIT",
-    "types": "dist/types/",
     "files": [
         "dist",
         "transformations",

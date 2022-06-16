@@ -6,3 +6,4 @@ declare namespace _default {
 }
 export default _default;
 import Transformation from "../transformation.js";
+//# sourceMappingURL=SuperResolution.d.ts.map

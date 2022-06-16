@@ -59,3 +59,4 @@ import * as WatermarkRemoval from "./transformations/WatermarkRemoval";
 import * as AWSRekognition from "./transformations/AWSRekognition";
 import * as GoogleVision from "./transformations/GoogleVision";
 export { Pixelbin as default, Transformation };
+//# sourceMappingURL=pixelbin.d.ts.map

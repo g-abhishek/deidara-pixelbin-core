@@ -36,3 +36,4 @@ declare class Transformation {
      */
     getTransformation(): any;
 }
+//# sourceMappingURL=transformation.d.ts.map
